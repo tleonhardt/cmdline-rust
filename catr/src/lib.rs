@@ -1,53 +1,29 @@
-use clap::{App, Arg};
+use clap::Parser;
 use std::error::Error;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 
 type MyResult<T> = Result<T, Box<dyn Error>>;
 
-#[derive(Debug)]
+/// Rust cat
+#[derive(Parser, Debug)]
+#[clap(about, version, author="Ken Youens-Clark <kyclark@gmail.com>")]
 pub struct Config {
+    /// Input file(s)
+    #[clap(multiple_occurrences=true, default_value = "-")]
     files: Vec<String>,
+
+    /// Number lines
+    #[clap(short, long = "number", conflicts_with = "number-nonblank-lines")]
     number_lines: bool,
+
+    /// Number non-blank lines
+    #[clap(short='b', long = "number-nonblank")]
     number_nonblank_lines: bool,
 }
 
 pub fn get_args() -> MyResult<Config> {
-    let matches = App::new("catr")
-        .version("0.1.0")
-        .author("Ken Youens-Clark <kyclark@gmail.com>")
-        .about("Rust cat")
-        .arg(
-            Arg::new("files")
-                .value_name("FILE")
-                .help("Input file(s)")
-                .multiple_occurrences(true)
-                .default_value("-")
-                .takes_value(true)
-                .allow_invalid_utf8(true),
-        )
-        .arg(
-            Arg::new("number")
-                .short('n')
-                .long("number")
-                .help("Number lines")
-                .takes_value(false)
-                .conflicts_with("number_nonblank"),
-        )
-        .arg(
-            Arg::new("number_nonblank")
-                .short('b')
-                .long("number-nonblank")
-                .help("Number non-blank lines")
-                .takes_value(false),
-        )
-        .get_matches();
-
-    Ok(Config {
-        files: matches.values_of_lossy("files").unwrap(),
-        number_lines: matches.is_present("number"),
-        number_nonblank_lines: matches.is_present("number_nonblank"),
-    })
+    Ok(Config::parse())
 }
 
 pub fn run(config: Config) -> MyResult<()> {
