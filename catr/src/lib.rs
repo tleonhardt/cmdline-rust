@@ -7,7 +7,7 @@ type MyResult<T> = Result<T, Box<dyn Error>>;
 
 /// Rust cat
 #[derive(Parser, Debug)]
-#[clap(about, version, author="Ken Youens-Clark <kyclark@gmail.com>")]
+#[clap(about, version, author="Todd Leonhardt")]
 pub struct Config {
     /// Input file(s)
     #[clap(multiple_occurrences=true, default_value = "-")]

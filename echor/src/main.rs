@@ -2,10 +2,10 @@ use clap::Parser;
 
 /// Rust echo
 #[derive(Parser, Debug)]
-#[clap(about, version, author="Ken Youens-Clark <kyclark@gmail.com>")]
+#[clap(about, version, author = "Todd Leonhardt")]
 struct Args {
     /// Input text
-    #[clap(required=true)]
+    #[clap(required = true)]
     text: Vec<String>,
 
     /// Do not print newline
@@ -16,5 +16,9 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    print!("{}{}", args.text.join(" "), if args.newline_omit { "" } else { "\n" });
+    print!(
+        "{}{}",
+        args.text.join(" "),
+        if args.newline_omit { "" } else { "\n" }
+    );
 }
